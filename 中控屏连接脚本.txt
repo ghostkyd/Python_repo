@@ -1,0 +1,10 @@
+
+ssh root@192.168.211.100
+dtach -a /tmp/vmm 
+su
+echo peripheral > /sys/devices/platform/soc/a800000.ssusb/mode
+
+adb root
+adb remount
+adb shell screenrecord > C:\Users\ghost\Documents\turnonVideo.mp4
+adb logcat > C:\Users\\Documents\turnonLog.log
