@@ -156,7 +156,7 @@ def getOwner(carType, module):
 # 主进程开始---------------------------------
 if __name__ == '__main__':
     name = sys.argv[1:2]
-    # name = ['1月17日']
+    name = ['4月11日']
     if (len(name) < 1 or len(name[0]) < 1):
         print('RTC sheet name is empty ')
         sys.exit()
