@@ -6,15 +6,15 @@ import time
 import sys
 import re
 
-csvFile = r"./DataFile/RTC每日更新查询.csv"
-newFile = r"./DataFile/Open assigned to me.xlsx"
-rtcFile = r"./DataFile/RTC系统问题汇总--每天更新_2025.xlsx"
-saveFile = r"./DataFile/RTC list new.xlsx"
+csvFile = r"/Users/stanleysun/Documents/Python_repo/DataFile/RTC每日更新查询.csv"
+newFile = r"/Users/stanleysun/Documents/Python_repo/DataFile/Open assigned to me.xlsx"
+rtcFile = r"/Users/stanleysun/Documents/Python_repo/DataFile/RTC系统问题汇总--每天更新_2026.xlsx"
+saveFile = r"/Users/stanleysun/Documents/Python_repo/DataFile/RTC list new.xlsx"
 
 platform_GB= ['B233', 'B223', 'E22', 'E2UB', 'E2YB', 'C1YB','L232','L233','L234','C1UL_2','O1SL_2','A2LL','E2UL','E2QL']
 platform_CL = ['458', '458-HEV','358-2','358-2PHEV','557']
 
-extendColcolor = "FDE9D9"
+extendColor = "FDE9D9"
 extName = ['领域', '说明', '模块', '车型', '负责人', '超期/天', '进展说明（对应模块的研发更新）', '研发状态开发更新',
            '提交代码date', '版本时间', '测试结果', '测试备注', '签入日期','测试人员']
 
@@ -29,11 +29,11 @@ moduleOnwers = {"climate": "徐欢", "audio": "张书俊", "setting": "苗棽",
 
 # 功能函数块开始---------------------------------------
 def getModule(summary):
-    if ("climate" in str(summary).lower()):
+    if "climate" in str(summary).lower():
         return "climate"
-    if ("vehicle control" in str(summary).lower() or "vehicle_control" in str(summary).lower() or "vehiclecontrol" in str(summary).lower()):
+    if "vehicle control" in str(summary).lower() or "vehicle_control" in str(summary).lower() or "vehiclecontrol" in str(summary).lower():
         return "vehicle_control"
-    if ("vehicle setting" in str(summary).lower() or "vehicle_setting" in str(summary).lower() or "vehiclesetting" in str(summary).lower()):
+    if "vehicle setting" in str(summary).lower() or "vehicle_setting" in str(summary).lower() or "vehiclesetting" in str(summary).lower():
         return "vehicle_setting"
     if ("adassetting" in str(summary).lower() or "adas_setting" in str(summary).lower() or "adas setting" in str(summary).lower() or
             "adassettings" in str(summary).lower() or "adas_settings" in str(summary).lower() or "adas settings" in str(summary).lower()):
@@ -113,14 +113,20 @@ def getCarType(platform):
         carType = carType+"458-HEV,"
     if ("U-Van/458 HEV/" in str(platform)):
         carType = carType+"458-HEV,"
+    if ("U-Van/458/MY27" in str(platform)):
+        carType = carType+"458 my27,"
     if ("U-Van/358-2/" in str(platform)):
         carType = carType+"358-2,"
     if ("U-Van/358-2 PHEV/" in str(platform)):
         carType = carType+"358-2PHEV,"
     if ("/NDLB/" in str(platform)):
         carType = carType+"NDLB,"
-    if ("U-Van/557/MY26" in str(platform)):
+    if ("U-Van/557" in str(platform)):
         carType = carType+"557,"
+    if ("NDEV/NDLB/" in str(platform)):
+        carType = carType+"NDLB,"
+    if ("/NCUB" in str(platform)):
+        carType = carType+"NCUB,"
     
     if ("Alpha/A2LL/" in str(platform)):
         carType = carType+"A2LL,"
@@ -134,6 +140,11 @@ def getCarType(platform):
         carType = carType+"O1SL-2,"
     if ("Epsilon/E2UL" in str(platform)):
         carType = carType+"E2UL,"
+    if ("Epsilon/E2QL" in str(platform)):
+        carType = carType+"E2QL,"
+    if ("Crossover/C1UL-2" in str(platform)):
+        carType = carType+"C1UL-2,"
+
 
         
     carType = carType[:-1]
@@ -185,7 +196,7 @@ for i in range(0, len(extName)):
     newsheet.cell(row=1, column=extCol+i).value = extName[i]
     newsheet.cell(row=1, column=extCol+i).alignment = align
     newsheet.cell(row=1, column=extCol +
-                  i).fill = PatternFill(start_color=extendColcolor, fill_type="solid")
+                  i).fill = PatternFill(start_color=extendColor, fill_type="solid")
 
 xlsbook.save(newFile)
 print("文件转存完毕......")
@@ -210,11 +221,11 @@ merged = pd.merge(newSheet, rtcSheet, on='Id')
 id_tmp = []
 
 # 遍历合并后的数据表
-for index, row in merged.iterrows():
-    # 如果newSheet数据表中“tag”列含有"must"字符，而rtcSheet数据表中“tag”不列含有"must"字符
-    if 'must' in str(row['Tags_x']) and 'must' not in str(row['Tags_y']):
-        # 就把这条记录的主键值保存在数组id_tmp中
-        id_tmp.append(index)
+# for index, row in merged.iterrows():
+#     # 如果newSheet数据表中“tag”列含有"must"字符，而rtcSheet数据表中“tag”不列含有"must"字符
+#     if 'must' in str(row['Tags_x']) and 'must' not in str(row['Tags_y']):
+#         # 就把这条记录的主键值保存在数组id_tmp中
+#         id_tmp.append(index)
 
 if not rtcSheet.index.is_unique:
     print("rtcSheet索引不唯一，存在重复值：")
