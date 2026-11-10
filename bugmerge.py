@@ -144,6 +144,7 @@ def merge_tables(sheet_a_name):
     # 对 b_only 记录填写迁入日期
     today_str = datetime.now().strftime(DATE_FORMAT)
     if INBOUND_COL in df_result.columns:
+        df_result[INBOUND_COL] = df_result[INBOUND_COL].astype("object")
         df_result.loc[df_result[KEY_COL].isin(b_only_keys), INBOUND_COL] = today_str
 
     # 添加 a_only 记录，并将状态改为“已迁出”
